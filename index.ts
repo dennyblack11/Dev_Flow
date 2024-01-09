@@ -1,22 +1,32 @@
 import express, { Application, json } from "express";
 import cors from "cors";
-import env from "dotenv";
+import dotenv from "dotenv";
+import { dbConfig } from "./utils/dbConfig";
+
+dotenv.config();
 
 const app: Application = express();
 
 const port: number = parseInt(process.env.PORT!);
 
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
-const server = app.listen(port, () => {});
+const server = app.listen(port, () => {
+  console.clear();
+  console.log();
+  dbConfig();
+});
 
-process.on("uncaughtException", (error: Error) => {
-  console.log(error);
+process.on("uncaughtException", (err: Error) => {
+  console.log("uncaughtException: ", err);
   process.exit(1);
 });
 
-process.on("unhandledRejection", (error: Error) => {
-  console.log(error);
-  process.exit(1);
+process.on("unhandledRejection", (reason: any) => {
+  console.log("unhandledRejection: ", reason);
+
+  server.close(() => {
+    process.exit(1);
+  });
 });
