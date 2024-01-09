@@ -1,7 +1,7 @@
 import express, { Application, json } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { dbConfig } from "./utils/dbConfig";
+import { mainApp } from "./mainApp";
 
 dotenv.config();
 
@@ -12,10 +12,9 @@ const port: number = parseInt(process.env.PORT!);
 app.use(cors());
 app.use(express.json());
 
+mainApp(app);
 const server = app.listen(port, () => {
-  console.clear();
-  console.log();
-  dbConfig();
+  console.log("connected");
 });
 
 process.on("uncaughtException", (err: Error) => {
